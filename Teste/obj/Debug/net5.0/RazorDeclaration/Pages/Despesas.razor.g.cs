@@ -4,7 +4,7 @@
 #pragma warning disable 0649
 #pragma warning disable 0169
 
-namespace Teste
+namespace Teste.Pages
 {
     #line hidden
     using System;
@@ -103,13 +103,56 @@ using Teste.Pages.Services;
 #line default
 #line hidden
 #nullable disable
-    public partial class _Imports : System.Object
+    [Microsoft.AspNetCore.Components.RouteAttribute("/despesas/{id}")]
+    public partial class Despesas : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
-        protected void Execute()
+        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 33 "C:\Users\pedro\source\repos\Deputado\Teste\Pages\Despesas.razor"
+       
+    [Parameter]
+    public string Id { get; set; }
+    [Parameter]
+    public string Valorliquido03 { get; set; }
+    [Parameter]
+    public string Valorliquido04 { get; set; }
+    DespesasDeputado deputado;
+    string errorString;
+    int currentCount;
+    string urlfoto;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var request = new HttpRequestMessage(HttpMethod.Get,
+    "https://dadosabertos.camara.leg.br/api/v2/deputados/" + Convert.ToInt32(Id) + "/despesas?mes=4&mes=3&ordem=ASC&ordenarPor=ano");
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            deputado = await response.Content.ReadFromJsonAsync<DespesasDeputado>();
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"erro :{response.ReasonPhrase }";
+        }
+
+    }
+
+
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Services.AppData appdata { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IHttpClientFactory _clientFactory { get; set; }
     }
 }
 #pragma warning restore 1591

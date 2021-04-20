@@ -1,0 +1,68 @@
+﻿@page "/despesas/{id}"
+@inject IHttpClientFactory _clientFactory
+@inject Services.AppData appdata
+<h3>Perfil</h3>
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+    <div class="h2">@errorString</div>
+}
+else if (deputado is null)
+{
+    <div class="h4">Loading...</div>
+    <img src="/imagens/basicloader.gif" />
+}
+else
+{
+    for (int ini = 0; ini <= deputado.Dados.Count()-1; ini++)
+    {
+        if (@deputado.Dados[ini].ano == 2019 && @deputado.Dados[ini].mes == 03)
+        {
+            appdata.Valorliquido03 += deputado.Dados[ini].valorLiquido;
+        }
+        if (@deputado.Dados[ini].ano == 2019 && @deputado.Dados[ini].mes == 04)
+        {
+            appdata.Valorliquido04 += deputado.Dados[ini].valorLiquido;
+        }
+
+    }
+
+    <meta http-equiv="refresh" content="0; /perfil/@(Id)"/>
+
+
+}
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [Parameter]
+    public string Valorliquido03 { get; set; }
+    [Parameter]
+    public string Valorliquido04 { get; set; }
+    DespesasDeputado deputado;
+    string errorString;
+    int currentCount;
+    string urlfoto;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var request = new HttpRequestMessage(HttpMethod.Get,
+    "https://dadosabertos.camara.leg.br/api/v2/deputados/" + Convert.ToInt32(Id) + "/despesas?mes=4&mes=3&ordem=ASC&ordenarPor=ano");
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            deputado = await response.Content.ReadFromJsonAsync<DespesasDeputado>();
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"erro :{response.ReasonPhrase }";
+        }
+
+    }
+
+
+}
+

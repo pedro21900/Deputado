@@ -13,41 +13,86 @@ else if (deputado is null)
 }
 else
 {
-<article>
-    <h1>Foto</h1>
-    <img src="https://www.camara.leg.br/internet/deputado/bandep/@(Id).jpg" />
-</article>
-<aside>
-    <h6>Nome</h6>
-    <p>@deputado.Dados.NomeCivil</p>
-    <h6>Email</h6>
-    <p>@deputado.Dados.ultimoStatus.email</p>
-    <h6>sexo</h6>
-    <p>@deputado.Dados.sexo</p>
-    <h6>Partido</h6>
-    <p>@deputado.Dados.ultimoStatus.siglaPartido</p>
-    <h6>Nascimento</h6>
-    <p>@deputado.Dados.dataNascimento</p>
-    <h6>Escolaridade</h6>
-    <p>@deputado.Dados.escolaridade</p>
-    <h6>Rede Social</h6>
-    <p>
-        @foreach (var rede in @deputado.Dados.redeSocial)
-        {
-            @rede
+    if (appdata.Valorliquido04 == 0 && appdata.Valorliquido03 == 0 && Id != "")
+    {
+        <meta http-equiv="refresh" content="0; url='https://localhost:44392/despesas/@(Id)'" />
+    }
+    else { }
 
-        }
-    </p>
-    <h6>Vizualização</h6>
-    <p>
-        <p>Contagem de vizualização: @appdata.currentCount</p>
-    </p>
-    <h6>Ultimas despesas</h6>
-    <h4></h4>
-</aside>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Foto</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>
+                <figure>
+                    <img src="https://www.camara.leg.br/internet/deputado/bandep/@(Id).jpg" />
+                </figure>
+            </th>
+            <th>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nome: @deputado.Dados.NomeCivil</th>
+                            <th>Email: @deputado.Dados.ultimoStatus.email</th>
+                            <th>Escolaridade: @deputado.Dados.escolaridade</th>
+                            <th>Sexo: @deputado.Dados.sexo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Partido: @deputado.Dados.ultimoStatus.siglaPartido</th>
+                            <th>Nascimento: @deputado.Dados.dataNascimento</th>
+                            <th>
+                                Rede Social:
+                                <ul>
+                                    @foreach (var rede in @deputado.Dados.redeSocial)
+                                    {
+                                        <li>@rede</li>
 
-    <a href="/">Voltar</a>
+                                    }
+                                </ul>
+                            </th>
+                            <th>
+                                <h5>Ultimas despesas</h5>
+                                <table class="table table-striped">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>03/2019</th>
+                                            <th>04/2019</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@appdata.Valorliquido03.ToString("C")</td>
 
+                                            <td>@appdata.Valorliquido04.ToString("C")</td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th> <a href="/" @onclick="zeravalor">Voltar</a></th>
+                        </tr>
+                    </tbody>
+                </table>
+                    
+            </th>   
+            </tr>
+    </tbody>
+    </table>
+
+   
 }
 @code {
     [Parameter]
@@ -56,6 +101,12 @@ else
     string errorString;
     int currentCount;
     string urlfoto;
+    public void zeravalor()
+    {
+        appdata.Valorliquido03 = 0;
+        appdata.Valorliquido04 = 0;
+        Id = "";
+    }
     protected override async Task OnInitializedAsync()
     {
 
@@ -81,6 +132,4 @@ else
             urlfoto = deputado.Dados.ultimoStatus.UrlFoto;
         }
     }
-
-
 }

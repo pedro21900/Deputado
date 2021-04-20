@@ -34,13 +34,20 @@ else
             </tr>
         </thead>
         <tbody>
-            @if (xx > deputado.Dados.Count() / 5)
+            @if (xx > deputado.Dados.Count() / 5&& deputado.Dados.Count()>5)
             {
+
             }
             else
             {
+
                 var ini = 0 + (xx - 1) * 5;
                 var pagina = 4 + (xx - 1) * 5;
+                var lolo = deputado.Dados.Count();
+                if (deputado.Dados.Count() < 5)
+                {
+                    pagina = deputado.Dados.Count() - 1;
+                }
                 @for (var d = ini; d <= pagina; d++)
                 {
                     <tr>
@@ -51,7 +58,8 @@ else
                         <td>
                             <a href="/perfil/@deputado.Dados[d].Id" @onclick="IncrementCount">Vizualizar</a>
                         </td>
-                    </tr>
+                    </tr>                     
+                    
                 }}
             </tbody>
     </table>
@@ -66,8 +74,7 @@ else
             <li class="page-item"><a class="page-link" @onclick="UpdateHeading">Próximo</a></li>
         </ul>
     </nav>
-
-}
+    }
 @code {
     string inputValue;
     PerfilDeputado deputado;
@@ -120,6 +127,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+
         x = 1;
         xx = 1;
 
@@ -132,7 +140,7 @@ else
 
         if (response.IsSuccessStatusCode)
         {
-         
+
             deputado = await response.Content.ReadFromJsonAsync<PerfilDeputado>();
             errorString = null;
         }
