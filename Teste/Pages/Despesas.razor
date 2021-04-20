@@ -15,11 +15,11 @@ else
 {
     for (int ini = 0; ini <= deputado.Dados.Count()-1; ini++)
     {
-        if (@deputado.Dados[ini].ano == 2019 && @deputado.Dados[ini].mes == 03)
+        if (@deputado.Dados[ini].ano == thisDay.Year && @deputado.Dados[ini].mes == thisDay.Month-1)
         {
             appdata.Valorliquido03 += deputado.Dados[ini].valorLiquido;
         }
-        if (@deputado.Dados[ini].ano == 2019 && @deputado.Dados[ini].mes == 04)
+        if (@deputado.Dados[ini].ano == thisDay.Year && @deputado.Dados[ini].mes == thisDay.Month)
         {
             appdata.Valorliquido04 += deputado.Dados[ini].valorLiquido;
         }
@@ -38,6 +38,7 @@ else
     [Parameter]
     public string Valorliquido04 { get; set; }
     DespesasDeputado deputado;
+    DateTime thisDay = DateTime.Today;
     string errorString;
     int currentCount;
     string urlfoto;

@@ -11,6 +11,7 @@ namespace Teste.Pages.Services
         public int currentCount { get; set; }
         public float Valorliquido03 { get; set; }
         public float Valorliquido04 { get; set; }
+        public float Count { get; set; }
 
     }
 }

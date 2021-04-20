@@ -112,19 +112,23 @@ using Teste.Pages.Services;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 97 "C:\Users\pedro\source\repos\Deputado\Teste\Pages\Perfil.razor"
+#line 98 "C:\Users\pedro\source\repos\Deputado\Teste\Pages\Perfil.razor"
        
     [Parameter]
     public string Id { get; set; }
     Perfildep deputado;
+    DespesasDeputado despesas;
     string errorString;
     int currentCount;
     string urlfoto;
+    DateTime thisDay = DateTime.Today;
+    int Count = 0;
     public void zeravalor()
     {
         appdata.Valorliquido03 = 0;
         appdata.Valorliquido04 = 0;
         Id = "";
+        appdata.Count--;
     }
     protected override async Task OnInitializedAsync()
     {

@@ -121,6 +121,7 @@ using Teste.Pages.Services;
     [Parameter]
     public string Valorliquido04 { get; set; }
     DespesasDeputado deputado;
+    DateTime thisDay = DateTime.Today;
     string errorString;
     int currentCount;
     string urlfoto;

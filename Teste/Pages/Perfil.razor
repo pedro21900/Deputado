@@ -13,9 +13,10 @@ else if (deputado is null)
 }
 else
 {
-    if (appdata.Valorliquido04 == 0 && appdata.Valorliquido03 == 0 && Id != "")
+       if (appdata.Valorliquido04 == 0 && appdata.Valorliquido03 == 0 && Id != "" && appdata.Count == 0)
     {
         <meta http-equiv="refresh" content="0; url='https://localhost:44392/despesas/@(Id)'" />
+        appdata.Count++;
     }
     else { }
 
@@ -62,8 +63,8 @@ else
                                 <table class="table table-striped">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th>03/2019</th>
-                                            <th>04/2019</th>
+                                            <th>@(thisDay.Month-1)/@thisDay.Year</th>
+                                            <th>@thisDay.Month/@thisDay.Year</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -98,14 +99,18 @@ else
     [Parameter]
     public string Id { get; set; }
     Perfildep deputado;
+    DespesasDeputado despesas;
     string errorString;
     int currentCount;
     string urlfoto;
+    DateTime thisDay = DateTime.Today;
+    int Count = 0;
     public void zeravalor()
     {
         appdata.Valorliquido03 = 0;
         appdata.Valorliquido04 = 0;
         Id = "";
+        appdata.Count--;
     }
     protected override async Task OnInitializedAsync()
     {
