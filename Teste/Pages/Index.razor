@@ -1,0 +1,145 @@
+﻿@page "/"
+@inject IHttpClientFactory _clientFactory
+@inject Services.AppData appdata
+
+<h3>ListaDeputados</h3>
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+    <div class="h2">@errorString</div>
+}
+else if (deputado is null)
+{
+    <div class="h4">Loading...</div>
+    <img src="/imagens/basicloader.gif" />
+}
+else
+{
+    <p></p>
+    <div class="col-md-6">
+        <div class="input-group h2">
+            <input @bind="inputValue" name="data[search]" class="form-control" type="text" placeholder="Pesquisar Deputados">
+            <button class="btn btn-primary" type="submit" @onclick="OnInitializedAsync">
+                <span class="glyphicon glyphicon-search">Pesquisar</span>
+            </button>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Nome</th>
+                <th>Partido</th>
+                <th>UF</th>
+                <th>Email</th>
+                <th>Detalhes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (xx > deputado.Dados.Count() / 5)
+            {
+            }
+            else
+            {
+                var ini = 0 + (xx - 1) * 5;
+                var pagina = 4 + (xx - 1) * 5;
+                @for (var d = ini; d <= pagina; d++)
+                {
+                    <tr>
+                        <td>@deputado.Dados[d].Nome.</td>
+                        <td>@deputado.Dados[d].SiglaPartido</td>
+                        <td>@deputado.Dados[d].SiglaUf</td>
+                        <td>@deputado.Dados[d].Email</td>
+                        <td>
+                            <a href="/perfil/@deputado.Dados[d].Id" @onclick="IncrementCount">Vizualizar</a>
+                        </td>
+                    </tr>
+                }}
+            </tbody>
+    </table>
+    <nav aria-label="Navegação de página exemplo">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" @onclick="DownHeading">Anterior</a></li>
+            <li class="page-item"><a class="page-link" @onclick="Update1">@((5 * x) - 4)</a></li>
+            <li class="page-item"><a class="page-link" @onclick="Update2">@((5 * x) - 4+1)</a></li>
+            <li class="page-item"><a class="page-link" @onclick="Update3">@((5 * x) - 4+2)</a></li>
+            <li class="page-item"><a class="page-link" @onclick="Update4">@((5 * x) - 4+3)</a></li>
+            <li class="page-item"><a class="page-link" @onclick="Update5">@(5 * x)</a></li>
+            <li class="page-item"><a class="page-link" @onclick="UpdateHeading">Próximo</a></li>
+        </ul>
+    </nav>
+
+}
+@code {
+    string inputValue;
+    PerfilDeputado deputado;
+    string errorString;
+    int x;
+    int xx;
+    private void UpdateHeading()
+    {
+        if (x == (deputado.Dados.Count() / 5)) { }
+        else
+        {
+            x++;
+            xx = (5 * x) - 4;
+        }
+    }
+    private void DownHeading()
+    {
+        if (x == 1) { }
+        else
+        {
+            x--;
+            xx = (5 * x);
+
+        }
+    }
+    private void Update1()
+    {
+        xx = ((5 * x) - 4);
+    }
+    private void Update2()
+    {
+        xx = ((5 * x) - 4 + 1);
+    }
+    private void Update3()
+    {
+        xx = ((5 * x) - 4 + 2);
+    }
+    private void Update4()
+    {
+        xx = ((5 * x) - 4 + 3);
+    }
+    private void Update5()
+    {
+        xx = ((5 * x));
+    }
+    private void IncrementCount()
+    {
+        appdata.currentCount++;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        x = 1;
+        xx = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Get,
+    "https://dadosabertos.camara.leg.br/api/v2/deputados?nome=" + inputValue + "&ordem=ASC&ordenarPor=nome");
+
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+         
+            deputado = await response.Content.ReadFromJsonAsync<PerfilDeputado>();
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"erro :{response.ReasonPhrase }";
+        }
+
+    }
+}

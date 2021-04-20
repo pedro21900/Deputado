@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Z/Cx9DuDj0/joWvR0193wn1UBQhQupJQSevPBitNPBaL2Yi9hXSD6fYcFj2G0UDCBm9N6UVyKVyP4toRWy1iwQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\pedro\\source\\repos\\Teste\\Teste\\Teste.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pedro\\.nuget\\packages\\system.net.http.json\\5.0.0\\system.net.http.json.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,86 @@
+﻿@page "/perfil/{id}"
+@inject IHttpClientFactory _clientFactory
+@inject Services.AppData appdata
+<h3>Perfil</h3>
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+    <div class="h2">@errorString</div>
+}
+else if (deputado is null)
+{
+    <div class="h4">Loading...</div>
+    <img src="/imagens/basicloader.gif" />
+}
+else
+{
+<article>
+    <h1>Foto</h1>
+    <img src="https://www.camara.leg.br/internet/deputado/bandep/@(Id).jpg" />
+</article>
+<aside>
+    <h6>Nome</h6>
+    <p>@deputado.Dados.NomeCivil</p>
+    <h6>Email</h6>
+    <p>@deputado.Dados.ultimoStatus.email</p>
+    <h6>sexo</h6>
+    <p>@deputado.Dados.sexo</p>
+    <h6>Partido</h6>
+    <p>@deputado.Dados.ultimoStatus.siglaPartido</p>
+    <h6>Nascimento</h6>
+    <p>@deputado.Dados.dataNascimento</p>
+    <h6>Escolaridade</h6>
+    <p>@deputado.Dados.escolaridade</p>
+    <h6>Rede Social</h6>
+    <p>
+        @foreach (var rede in @deputado.Dados.redeSocial)
+        {
+            @rede
+
+        }
+    </p>
+    <h6>Vizualização</h6>
+    <p>
+        <p>Contagem de vizualização: @appdata.currentCount</p>
+    </p>
+    <h6>Ultimas despesas</h6>
+    <h4></h4>
+</aside>
+
+    <a href="/">Voltar</a>
+
+}
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Perfildep deputado;
+    string errorString;
+    int currentCount;
+    string urlfoto;
+    protected override async Task OnInitializedAsync()
+    {
+
+        var request = new HttpRequestMessage(HttpMethod.Get,
+    "https://dadosabertos.camara.leg.br/api/v2/deputados/" + Convert.ToInt32(Id));
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            deputado = await response.Content.ReadFromJsonAsync<Perfildep>();
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"erro :{response.ReasonPhrase }";
+        }
+        if (String.IsNullOrEmpty(deputado.Dados.ultimoStatus.UrlFoto))
+        { }
+        else
+        {
+            urlfoto = deputado.Dados.ultimoStatus.UrlFoto;
+        }
+    }
+
+
+}
